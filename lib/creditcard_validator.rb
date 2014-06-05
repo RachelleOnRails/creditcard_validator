@@ -8,7 +8,7 @@ class CreditcardValidator
   end
 
   def self.visa?
-    @number.start_with?('4') && (@number.length == 13 || @number.length == 16)
+    (@number.length == 13 || @number.length == 16) && @number.start_with?('4')
   end
 
   def self.amex?
@@ -52,19 +52,20 @@ class CreditcardValidator
     else
       # 1. remove the last digit to use as a check value
       # 2. reverse the numbers
-      # 3. double each odd-numbered entry in the array
+      # 3. double the first and every other entry in the array
       # 4. convert to a single digit
       # 5. cumulatively add these single digits
       # 6. take the units part of that sum
       # 7. subtract that number from 10
-      # 8. compare it to the check value taken in step 1
+      # 8. if the remainder is not a multiple of 10 compare it to the check value taken in step 1
+      # 9. if the remainder is a multiple of 10 compare 0 to the check value taken in step 1
 
       check_digit = @number[-1]
 
       sum = 0
       @number.chop.reverse.split("").each_with_index do |digit,index|
         digit = digit.to_i
-        if (index+1).odd?
+        if (index).even?
           sum += single_digitise(digit*2)
         else
           sum += digit
@@ -94,7 +95,6 @@ class CreditcardValidator
     STDOUT.flush
     gets.chomp
   end
-
 end
 
 if __FILE__ == $0
