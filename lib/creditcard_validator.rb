@@ -86,7 +86,11 @@ class CreditcardValidator
   def self.call(number)
     if valid_input? number
       card_type = card_type(number)
-      valid = valid_number?(number, card_type)
+      if valid_number?(number, card_type)
+        valid = 'valid'
+      else
+        valid = 'invalid'
+      end
       puts "#{card_type}: #{number} (#{valid})"
     else
       raise InvalidInput
