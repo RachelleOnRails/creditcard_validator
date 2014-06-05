@@ -7,43 +7,34 @@ class CreditcardValidator
     input.to_s[/^[0-9]\d*$/]
   end
 
-  # +============+=============+===============+
-  # | Card Type  | Begins With | Number Length |
-  # +============+=============+===============+
-  # | AMEX       | 34 or 37    | 15            |
-  # +------------+-------------+---------------+
-  # | Discover   | 6011        | 16            |
-  # +------------+-------------+---------------+
-  # | MasterCard | 51-55       | 16            |
-  # +------------+-------------+---------------+
-  # | Visa       | 4           | 13 or 16      |
-  # +------------+-------------+---------------+
+  def self.visa?
+    @number.start_with?('4') && (@number.length == 13 || @number.length == 16)
+  end
+
+  def self.amex?
+    @number.length == 15 && (@number.start_with?('34') || @number.start_with?('37'))
+  end
+
+  def self.discover?
+    @number.length == 16 && @number.start_with?('6011')
+  end
+
+  def self.mastercard?
+    @number.length == 16 &&
+        (@number.start_with?('51') || @number.start_with?('52') || @number.start_with?('53') || @number.start_with?('54') || @number.start_with?('55'))
+  end
+
   def self.card_type
-    case @number.length
-      when 13
-        if @number.start_with?('4')
-          'VISA'
-        else
-          'Unknown'
-        end
-      when 15
-        if @number.start_with?('34') || @number.start_with?('37')
-          'AMEX'
-        else
-          'Unknown'
-        end
-      when 16
-        if @number.start_with?('6011')
-          'Discover'
-        elsif @number.start_with?('51') || @number.start_with?('52') || @number.start_with?('53') || @number.start_with?('54') || @number.start_with?('55')
-          'MasterCard'
-        elsif @number.start_with?('4')
-          'VISA'
-        else
-          'Unknown'
-        end
-      else
-        'Unknown'
+    if visa?
+      'VISA'
+    elsif amex?
+      'AMEX'
+    elsif discover?
+      'Discover'
+    elsif mastercard?
+      'MasterCard'
+    else
+      'Unknown'
     end
   end
 
