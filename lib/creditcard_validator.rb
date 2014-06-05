@@ -18,26 +18,26 @@ class CreditcardValidator
   # +------------+-------------+---------------+
   # | Visa       | 4           | 13 or 16      |
   # +------------+-------------+---------------+
-  def self.card_type(number)
-    case number.length
+  def self.card_type
+    case @number.length
       when 13
-        if number.start_with?('4')
+        if @number.start_with?('4')
           'VISA'
         else
           'Unknown'
         end
       when 15
-        if number.start_with?('34') || number.start_with?('37')
+        if @number.start_with?('34') || @number.start_with?('37')
           'AMEX'
         else
           'Unknown'
         end
       when 16
-        if number.start_with?('6011')
+        if @number.start_with?('6011')
           'Discover'
-        elsif number.start_with?('51') || number.start_with?('52') || number.start_with?('53') || number.start_with?('54') || number.start_with?('55')
+        elsif @number.start_with?('51') || @number.start_with?('52') || @number.start_with?('53') || @number.start_with?('54') || @number.start_with?('55')
           'MasterCard'
-        elsif number.start_with?('4')
+        elsif @number.start_with?('4')
           'VISA'
         else
           'Unknown'
@@ -55,8 +55,8 @@ class CreditcardValidator
     end
   end
 
-  def self.valid_number?(number, card_type)
-    if card_type == 'Unknown'
+  def self.valid_number?
+    if @card_type == 'Unknown'
       false
     else
       # 1. remove the last digit to use as a check value
@@ -68,10 +68,10 @@ class CreditcardValidator
       # 7. subtract that number from 10
       # 8. compare it to the check value taken in step 1
 
-      check_digit = number[-1]
+      check_digit = @number[-1]
 
       sum = 0
-      number.chop.reverse.split("").each_with_index do |digit,index|
+      @number.chop.reverse.split("").each_with_index do |digit,index|
         digit = digit.to_i
         if (index+1).odd?
           sum += single_digitise(digit*2)
@@ -85,13 +85,14 @@ class CreditcardValidator
 
   def self.call(number)
     if valid_input? number
-      card_type = card_type(number)
-      if valid_number?(number, card_type)
+      @number = number
+      @card_type = card_type
+      if valid_number?
         valid = 'valid'
       else
         valid = 'invalid'
       end
-      puts "#{card_type}: #{number} (#{valid})"
+      puts "#{@card_type}: #{@number} (#{valid})"
     else
       raise InvalidInput
     end
