@@ -50,28 +50,22 @@ class CreditcardValidator
     if @card_type == 'Unknown'
       false
     else
-      # 1. remove the last digit to use as a check value
-      # 2. reverse the numbers
-      # 3. double the first and every other entry in the array
-      # 4. convert to a single digit
-      # 5. cumulatively add these single digits
-      # 6. take the units part of that sum
-      # 7. subtract that number from 10
-      # 8. if the remainder is not a multiple of 10 compare it to the check value taken in step 1
-      # 9. if the remainder is a multiple of 10 compare 0 to the check value taken in step 1
-
-      check_digit = @number[-1]
+      # 1. reverse the numbers
+      # 2. double the second and every other entry in the array
+      # 3. convert to a single digit
+      # 4. cumulatively add these single digits
+      # 5. if this sum is a multiple of 10 then the number is valid
 
       sum = 0
-      @number.chop.reverse.split("").each_with_index do |digit,index|
+      @number.reverse.split("").each_with_index do |digit,index|
         digit = digit.to_i
-        if (index).even?
+        if (index).odd?
           sum += single_digitise(digit*2)
         else
           sum += digit
         end
       end
-      ((sum % 10) == 0) ? '0' == check_digit : (10 - (sum % 10)).to_s == check_digit
+      sum % 10 == 0
     end
   end
 
