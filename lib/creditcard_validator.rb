@@ -47,10 +47,31 @@ class CreditcardValidator
     end
   end
 
+  def self.valid_number?(number, card_type)
+    if card_type == 'Unknown'
+      false
+    else
+      # 1. remove the last digit to use as a check value
+      # 2. reverse the numbers
+      # 3. double each odd-numbered entry in the array
+      # 4. convert to a single digit
+      # 5. cumulatively add these single digits
+      # 6. multiply that cumulative total by 9
+      # 7. take the last digit of that product
+      # 8. compare it to the check value taken in step 1
+
+      check_digit = number[-1]
+      test_num = number.chop.reverse
+
+      true
+    end
+  end
+
   def self.call(number)
     if valid_input? number
       card_type = card_type(number)
-      puts "card type is #{card_type}"
+      valid = valid_number?(number, card_type)
+      puts "#{card_type}: #{number} (#{valid})"
     else
       raise InvalidInput
     end
