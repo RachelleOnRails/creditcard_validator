@@ -61,9 +61,21 @@ class CreditcardValidator
       # 8. compare it to the check value taken in step 1
 
       check_digit = number[-1]
-      test_num = number.chop.reverse
 
-      true
+      sum = 0
+      number.chop.reverse.split("").each_with_index do |digit,index|
+        digit = digit.to_i
+        if (index+1).odd?
+          if digit*2 > 9
+            sum += (digit*2)/10 + (digit*2)%10
+          else
+            sum += digit*2
+          end
+        else
+          sum += digit
+        end
+      end
+      (sum * 9).to_s[-1] == check_digit
     end
   end
 
