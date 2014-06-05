@@ -64,8 +64,8 @@ class CreditcardValidator
       # 3. double each odd-numbered entry in the array
       # 4. convert to a single digit
       # 5. cumulatively add these single digits
-      # 6. multiply that cumulative total by 9
-      # 7. take the last digit of that product
+      # 6. take the units part of that sum
+      # 7. subtract that number from 10
       # 8. compare it to the check value taken in step 1
 
       check_digit = number[-1]
@@ -79,7 +79,7 @@ class CreditcardValidator
           sum += digit
         end
       end
-      (sum * 9).to_s[-1] == check_digit
+      ((sum % 10) == 0) ? '0' == check_digit : (10 - (sum % 10)).to_s == check_digit
     end
   end
 
