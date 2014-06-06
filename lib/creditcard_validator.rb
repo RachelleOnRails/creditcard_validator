@@ -2,29 +2,50 @@ class InvalidInput < StandardError
 end
 
 class CreditcardValidator
+  attr_accessor :number
 
-  def self.valid_input?(input)
+  def initialize(number)
+    @number = number
+  end
+
+  def call
+    if valid_input? number
+      @number ||= number
+      @card_type = card_type
+
+      if valid_number?
+        valid = 'valid'
+      else
+        valid = 'invalid'
+      end
+      return "#{@card_type}: #{@number} (#{valid})"
+    else
+      raise InvalidInput
+    end
+  end
+
+  def valid_input?(input)
     input.to_s[/^[0-9]\d*$/]
   end
 
-  def self.visa?
+  def visa?
     (@number.length == 13 || @number.length == 16) && @number.start_with?('4')
   end
 
-  def self.amex?
+  def amex?
     @number.length == 15 && (@number.start_with?('34') || @number.start_with?('37'))
   end
 
-  def self.discover?
+  def discover?
     @number.length == 16 && @number.start_with?('6011')
   end
 
-  def self.mastercard?
+  def mastercard?
     @number.length == 16 &&
         (@number.start_with?('51') || @number.start_with?('52') || @number.start_with?('53') || @number.start_with?('54') || @number.start_with?('55'))
   end
 
-  def self.card_type
+  def card_type
     if visa?
       'VISA'
     elsif amex?
@@ -38,7 +59,7 @@ class CreditcardValidator
     end
   end
 
-  def self.single_digitise(number)
+  def single_digitise(number)
     if number > 9
       number/10 + number%10
     else
@@ -46,7 +67,7 @@ class CreditcardValidator
     end
   end
 
-  def self.valid_number?
+  def valid_number?
     if @card_type == 'Unknown'
       false
     else
@@ -66,21 +87,6 @@ class CreditcardValidator
         end
       end
       sum % 10 == 0
-    end
-  end
-
-  def self.call(number)
-    if valid_input? number
-      @number = number
-      @card_type = card_type
-      if valid_number?
-        valid = 'valid'
-      else
-        valid = 'invalid'
-      end
-      puts "#{@card_type}: #{@number} (#{valid})"
-    else
-      raise InvalidInput
     end
   end
 
