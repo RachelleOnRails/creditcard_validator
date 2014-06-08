@@ -6,12 +6,11 @@ class CreditcardValidator
 
   def initialize(number)
     @number = number
+    @card_type = card_type
   end
 
   def call
     if valid_input? number
-      @number ||= number
-      @card_type = card_type
 
       if valid_number?
         valid = 'valid'
@@ -60,11 +59,7 @@ class CreditcardValidator
   end
 
   def single_digitise(number)
-    if number > 9
-      number/10 + number%10
-    else
-      number
-    end
+    (number > 9) ? number/10 + number%10 : number
   end
 
   def valid_number?
@@ -80,11 +75,7 @@ class CreditcardValidator
       sum = 0
       @number.reverse.split("").each_with_index do |digit,index|
         digit = digit.to_i
-        if (index).odd?
-          sum += single_digitise(digit*2)
-        else
-          sum += digit
-        end
+        (index).odd? ? sum += single_digitise(digit*2) : sum += digit
       end
       sum % 10 == 0
     end
