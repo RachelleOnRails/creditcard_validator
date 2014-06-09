@@ -3,10 +3,14 @@ require File.expand_path(File.dirname(__FILE__) + '../../lib/creditcard_validato
 describe 'CreditcardValidator' do
 
   context 'valid number' do
-    it 'VISA' do
-      expect(CreditcardValidator.new('4111111111119').call).to eq 'VISA: 4111111111119 (valid)'
-      expect(CreditcardValidator.new('4111111111111111').call).to eq 'VISA: 4111111111111111 (valid)'
-      expect(CreditcardValidator.new('4012888888881881').call).to eq 'VISA: 4012888888881881 (valid)'
+    describe 'VISA' do
+      it ('valid leading white space') { expect(CreditcardValidator.new('  4111111111111111').call).to eq 'VISA: 4111111111111111 (valid)' }
+      it ('valid trailing white space') { expect(CreditcardValidator.new('4111111111111111  ').call).to eq 'VISA: 4111111111111111 (valid)' }
+      it ('valid length 13') { expect(CreditcardValidator.new('4111111111119').call).to eq 'VISA: 4111111111119 (valid)' }
+      it ('valid length 16') do
+        expect(CreditcardValidator.new('4111111111111111').call).to eq 'VISA: 4111111111111111 (valid)'
+        expect(CreditcardValidator.new('4012888888881881').call).to eq 'VISA: 4012888888881881 (valid)'
+      end
     end
     it('AMEX')       { expect(CreditcardValidator.new('378282246310005').call).to eq 'AMEX: 378282246310005 (valid)' }
     it('Discover')   { expect(CreditcardValidator.new('6011111111111117').call).to eq 'Discover: 6011111111111117 (valid)' }

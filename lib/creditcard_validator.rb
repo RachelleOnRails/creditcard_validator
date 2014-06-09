@@ -5,18 +5,13 @@ class CreditcardValidator
   attr_accessor :number
 
   def initialize(number)
-    @number = number
+    @number = number.strip
     @card_type = card_type
   end
 
   def call
     if valid_input? number
-
-      if valid_number?
-        valid = 'valid'
-      else
-        valid = 'invalid'
-      end
+      valid_number? ? valid = 'valid' : valid = 'invalid'
       return "#{@card_type}: #{@number} (#{valid})"
     else
       raise InvalidInput
@@ -58,6 +53,7 @@ class CreditcardValidator
     end
   end
 
+  # single_digitise will only receive a number <= 18 so more complex logic is not required
   def single_digitise(number)
     (number > 9) ? number/10 + number%10 : number
   end
