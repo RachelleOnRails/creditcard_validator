@@ -12,9 +12,20 @@ describe 'CreditcardValidator' do
         expect(CreditcardValidator.new('4012888888881881').call).to eq 'VISA: 4012888888881881 (valid)'
       end
     end
-    it('AMEX')       { expect(CreditcardValidator.new('378282246310005').call).to eq 'AMEX: 378282246310005 (valid)' }
-    it('Discover')   { expect(CreditcardValidator.new('6011111111111117').call).to eq 'Discover: 6011111111111117 (valid)' }
-    it('MasterCard') { expect(CreditcardValidator.new('5105105105105100').call).to eq 'MasterCard: 5105105105105100 (valid)' }
+    describe 'AMEX' do
+      it('valid 34') { expect(CreditcardValidator.new('348282246310002').call).to eq 'AMEX: 348282246310002 (valid)' }
+      it('valid 37') { expect(CreditcardValidator.new('378282246310005').call).to eq 'AMEX: 378282246310005 (valid)' }
+    end
+    describe 'Disover' do
+      it('valid') { expect(CreditcardValidator.new('6011111111111117').call).to eq 'Discover: 6011111111111117 (valid)' }
+    end
+    describe 'MasterCard' do
+      it('valid 51') { expect(CreditcardValidator.new('5105105105105100').call).to eq 'MasterCard: 5105105105105100 (valid)' }
+      it('valid 52') { expect(CreditcardValidator.new('5205105105105091').call).to eq 'MasterCard: 5205105105105091 (valid)' }
+      it('valid 53') { expect(CreditcardValidator.new('5305105105105090').call).to eq 'MasterCard: 5305105105105090 (valid)' }
+      it('valid 54') { expect(CreditcardValidator.new('5405105105105081').call).to eq 'MasterCard: 5405105105105081 (valid)' }
+      it('valid 55') { expect(CreditcardValidator.new('5505105105105080').call).to eq 'MasterCard: 5505105105105080 (valid)' }
+    end
   end
 
   context 'invalid number' do
