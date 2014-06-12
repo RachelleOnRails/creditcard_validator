@@ -6,6 +6,7 @@ describe 'CreditcardValidator' do
     describe 'VISA' do
       it ('valid leading white space') { expect(CreditcardValidator.new('  4111111111111111').call).to eq 'VISA: 4111111111111111 (valid)' }
       it ('valid trailing white space') { expect(CreditcardValidator.new('4111111111111111  ').call).to eq 'VISA: 4111111111111111 (valid)' }
+      it ('valid with white space') { expect(CreditcardValidator.new('4111 1111 1111 1111').call).to eq 'VISA: 4111111111111111 (valid)' }
       it ('valid length 13') { expect(CreditcardValidator.new('4111111111119').call).to eq 'VISA: 4111111111119 (valid)' }
       it ('valid length 16') do
         expect(CreditcardValidator.new('4111111111111111').call).to eq 'VISA: 4111111111111111 (valid)'

@@ -5,7 +5,7 @@ class CreditcardValidator
   attr_accessor :number
 
   def initialize(number)
-    @number = number.strip
+    @number = number.gsub(/\s+/, "")
     @card_type = card_type
   end
 
