@@ -18,6 +18,8 @@ class CreditcardValidator
     end
   end
 
+  private
+
   def valid_input?(input)
     input.to_s[/^[0-9]\d*$/]
   end
